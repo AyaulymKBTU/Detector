@@ -1,0 +1,9 @@
+C:\Users\Compaq\Desktop\.net_pakita\face\face\bin\Debug\face.exe.config
+C:\Users\Compaq\Desktop\.net_pakita\face\face\bin\Debug\face.exe
+C:\Users\Compaq\Desktop\.net_pakita\face\face\bin\Debug\face.pdb
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.csprojResolveAssemblyReference.cache
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.Form1.resources
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.Properties.Resources.resources
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.csproj.GenerateResource.Cache
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.exe
+C:\Users\Compaq\Desktop\.net_pakita\face\face\obj\Debug\face.pdb
