@@ -86,14 +86,38 @@ namespace face
 
             }
             void threshold()
-            { }
+            {
+                int b, c, d;
+                for (int i = 0; i < preImage.Width; i++)
+                {
+                    for (int j = 0; j < preImage.Height; j++)
+                    {
+
+                        b = preImage.GetPixel(i, j).R;
+                        c = preImage.GetPixel(i, j).G;
+                        d = preImage.GetPixel(i, j).B;
+                        if(setColor(b,c,d))
+                       preImage.SetPixel(i,j,Color.Black);
+                        else
+                       preImage.SetPixel(i, j, Color.White);
+                    }
+                }
+            }
             public Bitmap preProcess()
             {
                 grayscale();
-                preImage=ImageProcessingUtility.ScaleImage(preImage,50,50);
-                preImage = ImageProcessingUtility.ScaleImage(preImage, 450, 400);
+                threshold();
+              //  preImage=ImageProcessingUtility.ScaleImage(preImage,50,50);
+               // preImage = ImageProcessingUtility.ScaleImage(preImage, 450, 400);
                 return preImage;
             }
+        }
+        public  static bool setColor(int a,int b,int c)
+        {
+            if (a > 100 && b > 100 && c > 100)
+                return true;
+            else
+                return false;
         }
         public static int Compare(int a, int b, int c, int d)
         {
