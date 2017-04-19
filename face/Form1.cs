@@ -65,32 +65,77 @@ namespace face
                     {
                         gray = (preImage.GetPixel(i, j).R + preImage.GetPixel(i, j).G + preImage.GetPixel(i, j).B) / 3;
                         preImage.SetPixel(i, j, Color.FromArgb(gray, gray, gray));
-                        //int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
-                        //Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
-                        //d.SetPixel(i, x, nc);
-
                     }
                 }
-                //  preImage.Save(@"C:/users/compaq/grayS.jpg");
+
 
             }
             void minimize()
-            { }
+            { int a, b, c, d,max;
+                for (int i = 0; i < preImage.Width-2; i+=2)
+                {
+                    for (int j = 0; j < preImage.Height-2; j+=2)
+                    {
+                        a = preImage.GetPixel(i, j).R;
+                       b= preImage.GetPixel(i+1, j).R;
+                       c= preImage.GetPixel(i, j+1).R;
+                       d= preImage.GetPixel(i+1, j+1).R;
+                       max= Compare(a, b, c, d);
+                    }
+                }
+
+            }
             void threshold()
             { }
             public Bitmap preProcess()
             {
                 grayscale();
+                preImage=ImageProcessingUtility.ScaleImage(preImage,50,50);
+                preImage = ImageProcessingUtility.ScaleImage(preImage, 450, 400);
                 return preImage;
             }
         }
+        public static int Compare(int a, int b, int c, int d)
+        {
+            int max1, max2, max;
+            if (a >= b)
+                max1 = a;
+            else
+                max1 = b;
+            if (c >= d)
+                max2 = c;
+            else
+                max2 = d;
+            if (max1 >= max2)
+                max = max1;
+            else
+                max = max2;
+            return max;
+        }
+        public static class ImageProcessingUtility
+        {
+            
+            static public Bitmap ScaleImage(Image image, int maxWidth, int maxHeight)
+            {
+                var ratioX = (double)maxWidth / image.Width;
+                var ratioY = (double)maxHeight / image.Height;
+                var ratio = Math.Min(ratioX, ratioY);
 
+                var newWidth = (int)(image.Width * ratio);
+                var newHeight = (int)(image.Height * ratio);
+
+                var newImage = new Bitmap(newWidth, newHeight);
+                Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+                Bitmap bmp = new Bitmap(newImage);
+
+                return bmp;
+            }
+        }
         private void button1_Click_1(object sender, EventArgs e)
         {
             PreProcessor pros = new PreProcessor();
-            pictureBox1.Image = (Image)pros.preProcess();
-            //  MessageBox.Show("done");
-            //pictureBox1.Refresh();
+            pictureBox1.Image = pros.preProcess();
+
         }
     }
 }
