@@ -30,7 +30,7 @@ namespace face
                 image = _image;
             }
         }
-        string selectedFile;
+        static string selectedFile;
         Bitmap picture;
         static Uploader upload;
         private void button1_Click(object sender, EventArgs e)
@@ -71,16 +71,17 @@ namespace face
 
             }
             void minimize()
-            { int a, b, c, d,max;
-                for (int i = 0; i < preImage.Width-2; i+=2)
+            {
+                int a, b, c, d, max;
+                for (int i = 0; i < preImage.Width - 2; i += 2)
                 {
-                    for (int j = 0; j < preImage.Height-2; j+=2)
+                    for (int j = 0; j < preImage.Height - 2; j += 2)
                     {
                         a = preImage.GetPixel(i, j).R;
-                       b= preImage.GetPixel(i+1, j).R;
-                       c= preImage.GetPixel(i, j+1).R;
-                       d= preImage.GetPixel(i+1, j+1).R;
-                       max= Compare(a, b, c, d);
+                        b = preImage.GetPixel(i + 1, j).R;
+                        c = preImage.GetPixel(i, j + 1).R;
+                        d = preImage.GetPixel(i + 1, j + 1).R;
+                        max = Compare(a, b, c, d);
                     }
                 }
 
@@ -96,29 +97,93 @@ namespace face
                         b = preImage.GetPixel(i, j).R;
                         c = preImage.GetPixel(i, j).G;
                         d = preImage.GetPixel(i, j).B;
-                        if(setColor(b,c,d))
-                       preImage.SetPixel(i,j,Color.Black);
+                        if (setColor(b, c, d))
+                            preImage.SetPixel(i, j, Color.FromArgb(0,0,0));
                         else
-                       preImage.SetPixel(i, j, Color.White);
+                            preImage.SetPixel(i, j, Color.FromArgb(255,255,255));
                     }
                 }
+
             }
+            bool haveBlackNeighbour(int i, int j)
+            {
+                if (preImage.GetPixel(i - 1, j - 1) == Color.White && preImage.GetPixel(i - 1, j) == Color.White && preImage.GetPixel(i + 1, j + 1) == Color.White && preImage.GetPixel(i, j - 1) == Color.White && preImage.GetPixel(i, j + 1) == Color.White && preImage.GetPixel(i + 1, j) == Color.White && preImage.GetPixel(i + 1, j - 1) == Color.White && preImage.GetPixel(i - 1, j + 1) == Color.White)
+                { return false; }
+                return true;
+            }
+            bool getColor(int r, int g, int b)
+            {
+                if (r == 255 && g == 255 && b == 255)
+                    return false;
+                else if (r == 0 && g == 0 && b == 0)
+                    return true;
+                else
+                {
+                    MessageBox.Show("hhhhhhhhhhhhhhhhh");
+                    return true;
+                }
+            }
+            Bitmap findCorners()
+            {
+                int c = 0;
+                Bitmap bn = preImage;
+                for (int i = 1; i < preImage.Width - 1; i++)
+                {
+                    for (int j = 1; j < preImage.Height - 1; j++)
+                    {
+
+                        if (!getColor(preImage.GetPixel(i, j).R, preImage.GetPixel(i, j).G, preImage.GetPixel(i, j).B))
+                        {
+
+                          
+                            if (getColor(preImage.GetPixel(i - 1, j - 1).R, preImage.GetPixel(i - 1, j - 1).G, preImage.GetPixel(i - 1, j - 1).B) ||
+                                getColor(preImage.GetPixel(i - 1, j).R, preImage.GetPixel(i - 1, j).G, preImage.GetPixel(i - 1, j).B) ||
+                                getColor(preImage.GetPixel(i + 1, j + 1).R, preImage.GetPixel(i + 1, j + 1).G, preImage.GetPixel(i + 1, j + 1).B) ||
+                                getColor(preImage.GetPixel(i, j - 1).R, preImage.GetPixel(i, j - 1).G, preImage.GetPixel(i, j - 1).B) ||
+                                getColor(preImage.GetPixel(i, j + 1).R, preImage.GetPixel(i, j + 1).G, preImage.GetPixel(i, j + 1).B) ||
+                                getColor(preImage.GetPixel(i + 1, j).R, preImage.GetPixel(i + 1, j).G, preImage.GetPixel(i + 1, j).B) ||
+                                getColor(preImage.GetPixel(i + 1, j - 1).R, preImage.GetPixel(i + 1, j - 1).G, preImage.GetPixel(i + 1, j - 1).B) ||
+                                getColor(preImage.GetPixel(i - 1, j + 1).R, preImage.GetPixel(i - 1, j + 1).G, preImage.GetPixel(i - 1, j + 1).B))
+                            //if(preImage.GetPixel(i,j).Equals(Color.White))
+                            //{
+                            //if (!(preImage.GetPixel(i + 1, j).Equals(Color.White) &&
+                            //   preImage.GetPixel(i + 1, j - 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i, j - 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i, j + 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i - 1, j - 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i + 1, j + 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i - 1, j + 1).Equals(Color.White) &&
+                            //   preImage.GetPixel(i - 1, j).Equals(Color.White)))
+                            { bn.SetPixel(i, j, Color.Red);c++; }
+                            }
+                        }
+                    }
+                MessageBox.Show(c.ToString());
+                return bn;
+
+            }
+            public void saveResult()
+            { preImage.Save(@"C:/users/compaq/desktop/pakita/results/" + "Jcorner.jpg"); }
             public Bitmap preProcess()
             {
-                grayscale();
-                threshold();
-              //  preImage=ImageProcessingUtility.ScaleImage(preImage,50,50);
-               // preImage = ImageProcessingUtility.ScaleImage(preImage, 450, 400);
+                // grayscale();    
+                setPreImage(upload.getImage());
+                //  preImage =ImageProcessingUtility.ScaleImage(preImage,40,40);
+                 // threshold();
+                preImage = findCorners();
+                saveResult();
+                //preImage = ImageProcessingUtility.ScaleImage(preImage, 450, 400); 
                 return preImage;
             }
         }
-        public  static bool setColor(int a,int b,int c)
+        public static bool setColor(int a, int b, int c)
         {
-            if (a > 100 && b > 100 && c > 100)
-                return true;
-            else
+            if (a >=100 && b >= 100 && c >=100)
                 return false;
+            else
+                return true;
         }
+
         public static int Compare(int a, int b, int c, int d)
         {
             int max1, max2, max;
@@ -138,7 +203,7 @@ namespace face
         }
         public static class ImageProcessingUtility
         {
-            
+
             static public Bitmap ScaleImage(Image image, int maxWidth, int maxHeight)
             {
                 var ratioX = (double)maxWidth / image.Width;
